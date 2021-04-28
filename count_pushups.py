@@ -24,7 +24,7 @@ def pull_data(file_name):
 
 
 #pulling data
-accel_file = 'Gravity'
+accel_file = 'jack_pushups'
 signal, timestamps = pull_data(accel_file)
 
 
