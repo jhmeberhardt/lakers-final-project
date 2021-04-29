@@ -8,18 +8,19 @@ from scipy.signal import butter, freqz, filtfilt, firwin, lfilter
 # Parsing accelerometer data
 def pull_data(file_name):
     f = open(file_name + '.csv')
-    rs = []
+    xs = []
     timestamps = []
     for line in f:
         value = line.split(',')
         #print(value[0])
         #zyx
         timestamps.append(float(value[1]))
-        r = 0
-        for i in range(2, len(value)):
-            r += float(value[i]) ** 2
-        rs.append(r)
-    return np.array(rs), np.array(timestamps)
+        # r = 0
+        # for i in range(2, len(value)):
+        #     r += float(value[i]) ** 2
+        # rs.append(r)
+        xs.append(value[len(value)-1])
+    return np.array(xs), np.array(timestamps)
 
 
 
@@ -41,21 +42,21 @@ plt.show()
 
 
 
-# high-pass filter
+# low-pass filter
 order = 3
-fs = 100
-cutoff = 15  # desired cutoff frequency of the filter, Hz. MODIFY AS APPROPRIATE
+fs = 10
+cutoff = 2  # desired cutoff frequency of the filter, Hz. MODIFY AS APPROPRIATE
 nyq = 0.5 * fs
 normal_cutoff = cutoff / nyq
-hp_b, hp_a = butter(order, normal_cutoff, btype='high', analog=False)
-hp_signal = filtfilt(hp_b, hp_a, signal)
+lp_b, lp_a = butter(order, normal_cutoff, btype='low', analog=False)
+lp_signal = filtfilt(lp_b, lp_a, signal)
 #signal = [x - 97 for x in signal]
-signal = signal - np.mean(signal)
+# signal = signal - np.mean(signal)
 
 
 plt.figure(figsize=(10,5))
 # plt.plot(timestamps, signal, 'r-', label = 'unfiltered')
-plt.plot(timestamps, hp_signal, 'b-', label = 'processed')
+plt.plot(timestamps, lp_signal, 'b-', label = 'processed')
 plt.plot(timestamps, signal, 'r-',label='unfiltered')
 
 
