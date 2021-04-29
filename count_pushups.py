@@ -42,19 +42,21 @@ plt.show()
 
 
 # high-pass filter
-order = 5
+order = 3
 fs = 100
-cutoff = 10  # desired cutoff frequency of the filter, Hz. MODIFY AS APPROPRIATE
+cutoff = 15  # desired cutoff frequency of the filter, Hz. MODIFY AS APPROPRIATE
 nyq = 0.5 * fs
 normal_cutoff = cutoff / nyq
 hp_b, hp_a = butter(order, normal_cutoff, btype='high', analog=False)
 hp_signal = filtfilt(hp_b, hp_a, signal)
 #signal = [x - 97 for x in signal]
+signal = signal - np.mean(signal)
 
 
 plt.figure(figsize=(10,5))
 # plt.plot(timestamps, signal, 'r-', label = 'unfiltered')
 plt.plot(timestamps, hp_signal, 'b-', label = 'processed')
+plt.plot(timestamps, signal, 'r-',label='unfiltered')
 
 
 
