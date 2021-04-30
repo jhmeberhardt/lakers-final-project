@@ -4,24 +4,15 @@ import math
 import numpy as np
 import pylab as pl
 from scipy.signal import butter, freqz, filtfilt, firwin, lfilter
+import extract_data
 
-# Parsing accelerometer data (iphone)
-def pull_data(file_name):
-    f = open(file_name + '.csv')
-    f.readline()
-    xs = []
-    timestamps = []
-    for line in f:
-        value = line.split(',')
-        timestamps.append(float(value[1]))
-        xs.append(float(value[len(value)-1]))
-    return np.array(xs), np.array(timestamps)
+# Parsing accelerometer data (iphon
 
 
 
 #pulling data
 accel_file = 'jack_pushups'
-signal, timestamps = pull_data(accel_file)
+signal, timestamps = extract_data.pull_data_iphone(accel_file)
 
 
 
