@@ -14,7 +14,6 @@ def pull_data(file_name):
     for line in f:
         value = line.split(',')
         timestamps.append(float(value[1]))
-
         xs.append(float(value[len(value)-1]))
     return np.array(xs), np.array(timestamps)
 
@@ -51,19 +50,33 @@ lp_signal = filtfilt(lp_b, lp_a, signal)
 # signal = signal - np.mean(signal)
 
 
+lp_signal = lp_signal[800:2400]
+timestamps = timestamps[800:2400]
+
+steps = []
+# threshold = 0
+for i in range (1, len(lp_signal) - 1):
+    cur = lp_signal[i]
+    if (cur - (-2) < 0.001 and lp_signal[i+1] > -2):
+        steps.append(i)
+print(steps)
+
+
+
 plt.figure(figsize=(10,5))
 # plt.plot(timestamps, signal, 'r-', label = 'unfiltered')
 plt.plot(timestamps, lp_signal, 'b-', label = 'processed')
 #plt.plot(timestamps, signal, 'r-',label='unfiltered')
+for index in steps:
+    pl.plot(timestamps[index], lp_signal[index], 'x', color='black')
 
-
-
-plt.title("Filtered data vs Unfiltered data")
+plt.title("Filtered pushup data with pushups marked")
 pl.legend(loc='upper left')
 plt.xlabel("Time (s)")
 plt.ylabel("Height (10^-3 m)")
 plt.grid()
 plt.show()
+
 
 
 
