@@ -42,11 +42,6 @@ def fft_feature_calculator(window):
     fft_arr = np.fft.rfft(get_magnitude(window))
     return [sum(fft_arr.astype(float))] # could also experiment with max()
 
-def count_peaks_feature(window, height=11):
-    magnitude = get_magnitude(window)
-
-    peaks, _ = find_peaks(magnitude, height)
-    return [len(peaks)]
 
 def entropy_calculator(window):
     mag = get_magnitude(window)
