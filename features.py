@@ -15,15 +15,17 @@ from scipy.signal import find_peaks
 
 
 # ---------------------------------------------------------------------------
-#		                    Calculate Mean
+#		                    Calculate Mean X,Y,Z
 # -----------------------------------------------------------------------------
 def calculate_mean(window):
-    """
-    Computes the mean x, y and z acceleration over the given window.
-    """
     return np.mean(window, axis=0)
 
-# TODO: define functions to compute more features
+# ---------------------------------------------------------------------------
+#		                    Calculate Standard Deviation X,Y,Z
+# -----------------------------------------------------------------------------
+def calculate_std(window):
+    return np.std(window, axis=0)
+
 
 
 
@@ -31,9 +33,7 @@ def calculate_mean(window):
 #		                    Calculate Magnitude
 # -----------------------------------------------------------------------------
 def get_magnitude(window):
-    '''
-    Not being used right now
-    '''
+
     magnitude = np.zeros(len(window))
 
     for i in range(len(window)):
@@ -126,16 +126,12 @@ def entropy_calculator(window):
 
 
 def extract_features(window):
-    """
-    Here is where you will extract your features from the data over
-    the given window. We have given you an example of computing
-    the mean and appending it to the feature vector.
-    """
+
 
     x = []
     feature_names = []
 
-    x.append(_compute_mean_features(window))
+    x.append(calculate_mean(window))
     feature_names.append("x_mean")
     feature_names.append("y_mean")
     feature_names.append("z_mean")
