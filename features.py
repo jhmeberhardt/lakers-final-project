@@ -13,7 +13,11 @@ it is still publicly accessible).
 import numpy as np
 from scipy.signal import find_peaks
 
-def _compute_mean_features(window):
+
+# ---------------------------------------------------------------------------
+#		                    Calculate Mean
+# -----------------------------------------------------------------------------
+def calculate_mean(window):
     """
     Computes the mean x, y and z acceleration over the given window.
     """
@@ -22,6 +26,10 @@ def _compute_mean_features(window):
 # TODO: define functions to compute more features
 
 
+
+# ---------------------------------------------------------------------------
+#		                    Calculate Magnitude
+# -----------------------------------------------------------------------------
 def get_magnitude(window):
     '''
     Not being used right now
@@ -32,17 +40,79 @@ def get_magnitude(window):
         temp = (window[i][0]**2 + window[i][1]**2 + window[i][2]**2) ** 0.5
         magnitude[i] = temp
 
-    magnitude_mean = np.mean(magnitude)
+    
     return magnitude
 
+
+
+# ---------------------------------------------------------------------------
+#		                    Calculate Mean of Magnitude
+# -----------------------------------------------------------------------------
+def mean_magnitude(window):
+    magnitude = get_magnitude(window)
+    return np.mean(magnitude)
+
+
+# ---------------------------------------------------------------------------
+#		                    Calculate Variance
+# -----------------------------------------------------------------------------
 def calculate_variance(window):
     return np.var(window, axis=0)
 
+
+# ---------------------------------------------------------------------------
+#		                    FFT
+# -----------------------------------------------------------------------------
 def fft_feature_calculator(window):
     fft_arr = np.fft.rfft(get_magnitude(window))
     return [sum(fft_arr.astype(float))] # could also experiment with max()
 
 
+
+
+# ---------------------------------------------------------------------------
+#		                    Count Peaks
+# -----------------------------------------------------------------------------
+def count_peaks_feature(window, height=11):
+    magnitude = get_magnitude(window)
+
+    peaks, _ = find_peaks(magnitude, height)
+    return [len(peaks)]
+
+
+
+# ---------------------------------------------------------------------------
+#		                    Mean Peak Height
+# -----------------------------------------------------------------------------
+def mean_peak_height(window,height=11):
+    magnitude = get_magnitude(window)
+    peaks, _ = find_peaks(magnitude,height)
+    
+    heights = np.zeros(len(peaks))
+    for i in range(len(peaks)):
+        temp = magnitude[peaks[i]]
+        heights[i] = temp
+
+    return np.mean(heights)
+
+
+# ---------------------------------------------------------------------------
+#		                    Mean Peak Distance
+# -----------------------------------------------------------------------------
+def mean_peak_distance(window,height=11):
+    magnitude = get_magnitude(window)
+
+    peaks, _ = find_peaks(magnitude, height)
+    distances = []
+    for i in range(1,len(peaks)):
+        distances.append(peaks[i]-peaks[i-1])
+    distances = np.array(distances)
+    return np.mean(distances)
+
+
+# ---------------------------------------------------------------------------
+#		                    Entropy
+# -----------------------------------------------------------------------------
 def entropy_calculator(window):
     mag = get_magnitude(window)
     counts,bins = np.histogram(mag,20)
@@ -51,6 +121,9 @@ def entropy_calculator(window):
     PA = counts / np.sum(counts, dtype=float)
     SA = -PA * np.log(PA)
     return [-np.sum(PA * np.log(PA),axis=0)]
+
+
+
 
 def extract_features(window):
     """
