@@ -11,7 +11,8 @@ it is still publicly accessible).
 """
 
 import numpy as np
-from scipy.signal import find_peaks
+import scipy
+from scipy.signal import find_peaks_cwt
 
 
 # ---------------------------------------------------------------------------
@@ -25,6 +26,14 @@ def calculate_mean(window):
 # -----------------------------------------------------------------------------
 def calculate_std(window):
     return np.std(window, axis=0)
+
+
+
+# ---------------------------------------------------------------------------
+#		                    Calculate StdDev of Magnitude
+# -----------------------------------------------------------------------------
+def std_magnitude(window):
+    return mp.std(get_magnitude(window))
 
 
 
@@ -73,10 +82,10 @@ def fft_feature_calculator(window):
 # ---------------------------------------------------------------------------
 #		                    Count Peaks
 # -----------------------------------------------------------------------------
-def count_peaks_feature(window, height=11):
+def count_peaks(window, height=11):
     magnitude = get_magnitude(window)
 
-    peaks, _ = find_peaks(magnitude, height)
+    peaks, _ = find_peaks_cwt(magnitude, height)
     return [len(peaks)]
 
 
@@ -86,7 +95,7 @@ def count_peaks_feature(window, height=11):
 # -----------------------------------------------------------------------------
 def mean_peak_height(window,height=11):
     magnitude = get_magnitude(window)
-    peaks, _ = find_peaks(magnitude,height)
+    peaks, _ = find_peaks_cwt(magnitude,height)
     
     heights = np.zeros(len(peaks))
     for i in range(len(peaks)):
@@ -102,7 +111,7 @@ def mean_peak_height(window,height=11):
 def mean_peak_distance(window,height=11):
     magnitude = get_magnitude(window)
 
-    peaks, _ = find_peaks(magnitude, height)
+    peaks, _ = find_peaks_cwt(magnitude, height)
     distances = []
     for i in range(1,len(peaks)):
         distances.append(peaks[i]-peaks[i-1])
@@ -131,6 +140,8 @@ def extract_features(window):
     x = []
     feature_names = []
 
+
+
     x.append(calculate_mean(window))
     feature_names.append("x_mean")
     feature_names.append("y_mean")
@@ -141,16 +152,33 @@ def extract_features(window):
     feature_names.append("y_variance")
     feature_names.append("z_variance")
 
-    x.append(fft_feature_calculator(window))
-    feature_names.append("Magnitude Fourier Transform")
+    x.append(calculate_std(window))
+    feature_names.append("x_std")
+    feature_names.append("y_std")
+    feature_names.append("z_std")
 
-    x.append(count_peaks_feature(window))
-    feature_names.append("Magnitude peak count")
+    x.append(std_magnitude(window))
+    feature_names.append("magnitude_std")
 
-    x.append(entropy_calculator(window))
-    feature_names.append("Entropy")
+    x.append(mean_magnitude(window))
+    feature_names.append("magnitude_mean")
 
-    # TODO: call functions to compute other features. Append the features to x and the names of these features to feature_names
+
+    x.append(count_peaks(window))
+    feature_names.append("magnitude peak count")
+
+
+    x.append(mean_peak_height(window))
+    feature_names.append("mean peak height of magnitude")
+
+
+    x.append(mean_peak_distance(window))
+    feature_names.append("mean peak distance of magnitude")
+
+
+
+
+
     feature_vector = np.concatenate(x, axis=0) # convert the list of features to a single 1-dimensional vector
 
     return feature_names, feature_vector

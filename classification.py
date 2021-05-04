@@ -1,18 +1,19 @@
 import os
 import sys
 import numpy as np
-import sklearn
+
+# import sklearn
 import extract_data
-from sklearn.tree import export_graphviz
-from sklearn import model_selection
-from sklearn import tree
+# from sklearn.tree import export_graphviz
+# from sklearn import model_selection
+# from sklearn import tree
 from features import extract_features
 from util import slidingWindow, reorient, reset_vars
-import pickle
-from sklearn import metrics
-from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score
+# import pickle
+# from sklearn import metrics
+# from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score
 
-# %%---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
 #
 #		                 Load Data From Disk
 #
@@ -26,7 +27,7 @@ print("Loaded {} raw labelled activity data samples.".format(len(data)))
 sys.stdout.flush()
 
 
-# %%---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
 #
 #		                    Pre-processing
 #
@@ -35,13 +36,13 @@ sys.stdout.flush()
 print("Reorienting accelerometer data...")
 sys.stdout.flush()
 reset_vars()
-reoriented = np.asarray([reorient(data[i,2], data[i,3], data[i,4]) for i in range(len(data))])
+reoriented = np.asarray([reorient(data[i,4], data[i,3], data[i,2]) for i in range(len(data))])
 reoriented_data_with_timestamps = np.append(data[:,1:2],reoriented,axis=1)
 data = np.append(reoriented_data_with_timestamps, data[:,-1:], axis=1)
 
 
 
-# %%---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
 #
 #		                Extract Features & Labels
 #
@@ -55,8 +56,8 @@ n_samples = 1000
 time_elapsed_seconds = (data[n_samples,0] - data[0,0]) / 1000
 sampling_rate = n_samples / time_elapsed_seconds
 
-# TODO: list the class labels that you collected data for in the order of label_index (defined while collecting data)
-class_names = ["sitting", "walking", "standing", "rocking on the ground"] #...
+
+class_names = ["standing up", "pushups", "laying down"] #...
 
 print("Extracting features and labels for window size {} and step size {}...".format(window_size, step_size))
 sys.stdout.flush()
