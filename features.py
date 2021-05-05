@@ -12,7 +12,8 @@ it is still publicly accessible).
 
 import numpy as np
 import scipy
-from scipy.signal import find_peaks_cwt
+from scipy import signal
+import scipy 
 
 
 # ---------------------------------------------------------------------------
@@ -85,7 +86,7 @@ def fft_feature_calculator(window):
 def count_peaks(window, height=11):
     magnitude = get_magnitude(window)
 
-    peaks, _ = find_peaks_cwt(magnitude, height)
+    peaks, _ = signal.find_peaks(magnitude, height)
     return [len(peaks)]
 
 
