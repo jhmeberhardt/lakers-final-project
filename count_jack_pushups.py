@@ -54,6 +54,9 @@ print(pushups)
 
 
 
+
+
+
 plt.figure(figsize=(10,5))
 # plt.plot(timestamps, signal, 'r-', label = 'unfiltered')
 plt.plot(timestamps, lp_signal, 'b-', label = 'filtered data')

@@ -9,7 +9,8 @@ As a side note, the underscore at the beginning of a function is a Python
 convention indicating that the function has private access (although in reality
 it is still publicly accessible).
 """
-
+import matplotlib
+import matplotlib.pyplot as plt
 import numpy as np
 
 from scipy import signal
@@ -34,7 +35,7 @@ def calculate_std(window):
 #		                    Calculate StdDev of Magnitude
 # -----------------------------------------------------------------------------
 def std_magnitude(window):
-    return np.std(get_magnitude(window))
+    return [np.std(get_magnitude(window))]
 
 
 
@@ -51,7 +52,7 @@ def get_magnitude(window):
         magnitude[i] = temp
 
     
-    return magnitude
+    return [magnitude]
 
 
 
@@ -60,7 +61,7 @@ def get_magnitude(window):
 # -----------------------------------------------------------------------------
 def mean_magnitude(window):
     magnitude = get_magnitude(window)
-    return np.mean(magnitude)
+    return [np.mean(magnitude)]
 
 
 # ---------------------------------------------------------------------------
@@ -103,7 +104,7 @@ def mean_peak_height(window):
         temp = magnitude[peaks[i]]
         heights[i] = temp
 
-    return np.mean(heights)
+    return [np.mean(heights)]
 
 
 # ---------------------------------------------------------------------------
@@ -117,7 +118,7 @@ def mean_peak_distance(window,height=11):
     for i in range(1,len(peaks)):
         distances.append(peaks[i]-peaks[i-1])
     distances = np.array(distances)
-    return np.mean(distances)
+    return [np.mean(distances)]
 
 
 # ---------------------------------------------------------------------------
@@ -189,7 +190,11 @@ def extract_features(window):
 
 
 
+    # for i in range(0,len(x)):
+    #     print(str(x[i]) + "\n\n")
 
+    plt.figure(figsize=(10,5))
+    plt.plot(get_magnitude(window), 'b-', label = 'filtered data')
 
     feature_vector = np.concatenate(x, axis=0) # convert the list of features to a single 1-dimensional vector
 
