@@ -9,10 +9,10 @@ As a side note, the underscore at the beginning of a function is a Python
 convention indicating that the function has private access (although in reality
 it is still publicly accessible).
 """
+
+import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
-import numpy as np
-
 from scipy import signal
 import scipy 
 
@@ -52,7 +52,7 @@ def get_magnitude(window):
         magnitude[i] = temp
 
     
-    return [magnitude]
+    return magnitude
 
 
 
@@ -86,8 +86,8 @@ def fft_feature_calculator(window):
 # -----------------------------------------------------------------------------
 def count_peaks(window):
     magnitude = get_magnitude(window)
-
-    peaks = find_peaks(magnitude)
+    peaks = signal.find_peaks(magnitude)[0]
+    
     return [len(peaks)]
 
 
@@ -95,13 +95,15 @@ def count_peaks(window):
 # ---------------------------------------------------------------------------
 #		                    Mean Peak Height
 # -----------------------------------------------------------------------------
-def mean_peak_height(window):
+def mean_peak_height(window,height=11):
     magnitude = get_magnitude(window)
-    peaks = find_peaks(magnitude)
+    peaks = signal.find_peaks(magnitude,height)
     
     heights = np.zeros(len(peaks))
+    print(magnitude)
+    print(heights)
     for i in range(len(peaks)):
-        temp = magnitude[peaks[i]]
+        temp = peaks[i]
         heights[i] = temp
 
     return [np.mean(heights)]
@@ -110,14 +112,16 @@ def mean_peak_height(window):
 # ---------------------------------------------------------------------------
 #		                    Mean Peak Distance
 # -----------------------------------------------------------------------------
-def mean_peak_distance(window,height=11):
+def mean_peak_distance(window):
     magnitude = get_magnitude(window)
 
-    peaks = find_peaks(magnitude)
+    peaks = signal.find_peaks(magnitude)[0]
+    print(peaks)
     distances = []
     for i in range(1,len(peaks)):
         distances.append(peaks[i]-peaks[i-1])
     distances = np.array(distances)
+
     return [np.mean(distances)]
 
 
@@ -137,14 +141,14 @@ def entropy_calculator(window):
 
 
 # helper function
-def find_peaks(window):
-    #peak_timestamps = []
-    peaks = []
-    for i in range(1, len(window)-1):
-        if (window[i] > window[i-1]) and (window[i] > window[i+1]):
-            #step_timestamps.append(timestamps[i])
-            peaks.append(window[i])
-    return peaks
+# def find_peaks(window):
+#     #peak_timestamps = []
+#     peaks = []
+#     for i in range(1, len(window)-1):
+#         if (window[i] > window[i-1]) and (window[i] > window[i+1]):
+#             #step_timestamps.append(timestamps[i])
+#             peaks.append(window[i])
+#     return peaks
 
 
 def extract_features(window):
@@ -180,21 +184,21 @@ def extract_features(window):
     x.append(count_peaks(window))
     feature_names.append("magnitude peak count")
 
+    # print(count_peaks(window))
+    # print(get_magnitude(window))
+    #print(window)
 
-    x.append(mean_peak_height(window))
-    feature_names.append("mean peak height of magnitude")
+    # x.append(mean_peak_height(window))
+    # feature_names.append("mean peak height of magnitude")
 
 
-    x.append(mean_peak_distance(window))
-    feature_names.append("mean peak distance of magnitude")
-
+    # x.append(mean_peak_distance(window))
+    # feature_names.append("mean peak distance of magnitude")
 
 
     # for i in range(0,len(x)):
     #     print(str(x[i]) + "\n\n")
 
-    plt.figure(figsize=(10,5))
-    plt.plot(get_magnitude(window), 'b-', label = 'filtered data')
 
     feature_vector = np.concatenate(x, axis=0) # convert the list of features to a single 1-dimensional vector
 
