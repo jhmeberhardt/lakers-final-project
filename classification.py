@@ -21,7 +21,7 @@ from util import slidingWindow, reorient, reset_vars
 
 print("Loading data...")    
 sys.stdout.flush()
-data_file = 'jack_pushups.csv'
+data_file = 'data/jack_pushups.csv'
 data = np.genfromtxt(data_file, comments="#", delimiter=',')
 print("Loaded {} raw labelled activity data samples.".format(len(data)))
 sys.stdout.flush()

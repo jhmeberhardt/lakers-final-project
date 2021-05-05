@@ -33,7 +33,7 @@ def calculate_std(window):
 #		                    Calculate StdDev of Magnitude
 # -----------------------------------------------------------------------------
 def std_magnitude(window):
-    return mp.std(get_magnitude(window))
+    return np.std(get_magnitude(window))
 
 
 
