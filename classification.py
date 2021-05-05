@@ -8,7 +8,7 @@ import extract_data
 from sklearn.tree import export_graphviz
 from sklearn import model_selection
 from sklearn import tree
-from features import extract_features, get_magnitude
+from features import extract_features, get_magnitude, mean_peak_height
 from util import slidingWindow, reset_vars
 import pickle
 import warnings
@@ -57,6 +57,8 @@ class_names = ["standing up", "pushups", "laying down","walking","jumping jacks"
 print("Extracting features and labels for window size {} and step size {}...".format(window_size, step_size))
 sys.stdout.flush()
 
+avgHeights = []
+entropy = []
 X = []
 Y = []
 count = 0
@@ -64,6 +66,8 @@ for i,window_with_timestamp_and_label in slidingWindow(data_with_timestamps, win
     window = window_with_timestamp_and_label[:,1:-1]
     feature_names, x = extract_features(window)
     X.append(x)
+    avgHeights.append(x[6])
+    entropy.append(x[7])
 
     # Labeling data
     if count < 8:
@@ -160,6 +164,34 @@ avg_f1 = avg_f1 / len(f1_scores)
 
 
 print("Average Accuracy: %s\nAverage Precision: %s\nAverage Recall: %s\nAverage F1: %s" % (avg_accuracy,avg_precision,avg_recall,avg_f1))
+
+
+
+# Graphing features (uncomment below to graph mean peak height and entropy)
+
+
+# plt.figure(figsize=(10,5))
+
+# plt.plot(avgHeights, 'b-', label = 'mean peak height')
+
+# plt.title("Mean peak height")
+# plt.legend(loc='upper left')
+# plt.xlabel("Windows")
+# plt.ylabel("Height")
+# plt.grid()
+# plt.show()
+
+
+
+# plt.figure(figsize=(10,5))
+# plt.plot(entropy, 'b-', label = 'entropy')
+
+# plt.title("Entropy")
+# plt.legend(loc='upper left')
+# plt.xlabel("Windows")
+# plt.ylabel("Entropy")
+# plt.grid()
+# plt.show()
 
 
 
