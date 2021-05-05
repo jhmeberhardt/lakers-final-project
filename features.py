@@ -11,7 +11,7 @@ it is still publicly accessible).
 """
 
 import numpy as np
-import scipy
+
 from scipy import signal
 import scipy 
 
@@ -83,10 +83,10 @@ def fft_feature_calculator(window):
 # ---------------------------------------------------------------------------
 #		                    Count Peaks
 # -----------------------------------------------------------------------------
-def count_peaks(window, height=11):
+def count_peaks(window):
     magnitude = get_magnitude(window)
 
-    peaks, _ = signal.find_peaks(magnitude, height)
+    peaks = find_peaks(magnitude)
     return [len(peaks)]
 
 
@@ -94,9 +94,9 @@ def count_peaks(window, height=11):
 # ---------------------------------------------------------------------------
 #		                    Mean Peak Height
 # -----------------------------------------------------------------------------
-def mean_peak_height(window,height=11):
+def mean_peak_height(window):
     magnitude = get_magnitude(window)
-    peaks, _ = find_peaks_cwt(magnitude,height)
+    peaks = find_peaks(magnitude)
     
     heights = np.zeros(len(peaks))
     for i in range(len(peaks)):
@@ -112,7 +112,7 @@ def mean_peak_height(window,height=11):
 def mean_peak_distance(window,height=11):
     magnitude = get_magnitude(window)
 
-    peaks, _ = find_peaks_cwt(magnitude, height)
+    peaks = find_peaks(magnitude)
     distances = []
     for i in range(1,len(peaks)):
         distances.append(peaks[i]-peaks[i-1])
@@ -133,6 +133,17 @@ def entropy_calculator(window):
     return [-np.sum(PA * np.log(PA),axis=0)]
 
 
+
+
+# helper function
+def find_peaks(window):
+    #peak_timestamps = []
+    peaks = []
+    for i in range(1, len(window)-1):
+        if (window[i] > window[i-1]) and (window[i] > window[i+1]):
+            #step_timestamps.append(timestamps[i])
+            peaks.append(window[i])
+    return peaks
 
 
 def extract_features(window):
