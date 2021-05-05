@@ -17,6 +17,7 @@ from scipy import signal
 import scipy 
 
 
+
 # ---------------------------------------------------------------------------
 #		                    Calculate Mean X,Y,Z
 # -----------------------------------------------------------------------------
@@ -99,6 +100,9 @@ def mean_peak_height(window,height=11):
     magnitude = get_magnitude(window)
     peaks = signal.find_peaks(magnitude,height)
     
+    if len(peaks) == 0:
+        return [0]
+    
     heights = np.zeros(len(peaks))
     print(magnitude)
     print(heights)
@@ -112,17 +116,20 @@ def mean_peak_height(window,height=11):
 # ---------------------------------------------------------------------------
 #		                    Mean Peak Distance
 # -----------------------------------------------------------------------------
-def mean_peak_distance(window):
-    magnitude = get_magnitude(window)
+# def mean_peak_distance(window):
+#     magnitude = get_magnitude(window)
 
-    peaks = signal.find_peaks(magnitude)[0]
-    print(peaks)
-    distances = []
-    for i in range(1,len(peaks)):
-        distances.append(peaks[i]-peaks[i-1])
-    distances = np.array(distances)
+#     peaks = signal.find_peaks(magnitude)[0]
+#     if(len(peaks) == 0):
+#         return [0]
 
-    return [np.mean(distances)]
+#     print(peaks)
+#     distances = []
+#     for i in range(1,len(peaks)):
+#         distances.append(peaks[i]-peaks[i-1])
+#     distances = np.array(distances)
+
+#     return [np.mean(distances)]
 
 
 # ---------------------------------------------------------------------------
@@ -183,6 +190,10 @@ def extract_features(window):
 
     x.append(count_peaks(window))
     feature_names.append("magnitude peak count")
+
+    
+
+
 
     # print(count_peaks(window))
     # print(get_magnitude(window))
