@@ -24,6 +24,9 @@ import scipy
 def calculate_mean(window):
     return np.mean(window, axis=0)
 
+
+
+
 # ---------------------------------------------------------------------------
 #		                    Calculate Standard Deviation X,Y,Z
 # -----------------------------------------------------------------------------
@@ -96,40 +99,17 @@ def count_peaks(window):
 # ---------------------------------------------------------------------------
 #		                    Mean Peak Height
 # -----------------------------------------------------------------------------
-def mean_peak_height(window,height=11):
+def mean_peak_height(window):
     magnitude = get_magnitude(window)
-    peaks = signal.find_peaks(magnitude,height)
+    peaks = signal.find_peaks(magnitude)[0]
     
     if len(peaks) == 0:
         return [0]
     
-    heights = np.zeros(len(peaks))
-    print(magnitude)
-    print(heights)
-    for i in range(len(peaks)):
-        temp = peaks[i]
-        heights[i] = temp
 
-    return [np.mean(heights)]
+    return [np.mean(peaks)]
 
 
-# ---------------------------------------------------------------------------
-#		                    Mean Peak Distance
-# -----------------------------------------------------------------------------
-# def mean_peak_distance(window):
-#     magnitude = get_magnitude(window)
-
-#     peaks = signal.find_peaks(magnitude)[0]
-#     if(len(peaks) == 0):
-#         return [0]
-
-#     print(peaks)
-#     distances = []
-#     for i in range(1,len(peaks)):
-#         distances.append(peaks[i]-peaks[i-1])
-#     distances = np.array(distances)
-
-#     return [np.mean(distances)]
 
 
 # ---------------------------------------------------------------------------
@@ -191,6 +171,12 @@ def extract_features(window):
     x.append(count_peaks(window))
     feature_names.append("magnitude peak count")
 
+    x.append(mean_peak_height(window))
+    feature_names.append("mean peak height")
+
+    x.append(entropy_calculator(window))
+    feature_names.append("entropy")
+
     
 
 
@@ -210,6 +196,13 @@ def extract_features(window):
     # for i in range(0,len(x)):
     #     print(str(x[i]) + "\n\n")
 
+
+    # plt.figure(figsize=(10,5))
+    # plt.plot(get_magnitude(window), 'b-', label = 'filtered data')
+    # plt.xlabel("Time (s)")
+    # plt.ylabel("Acceleration (m/(s^2))")
+    # plt.grid()
+    # plt.show()
 
     feature_vector = np.concatenate(x, axis=0) # convert the list of features to a single 1-dimensional vector
 
