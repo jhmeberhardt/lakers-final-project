@@ -1,7 +1,7 @@
 import numpy as np
 
 def pull_data_iphone(file_name):
-    f = open(file_name + '.csv')
+    f = open('data/' + file_name + '.csv')
     f.readline()
     xs = []
     timestamps = []
