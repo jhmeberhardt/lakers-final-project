@@ -9,7 +9,7 @@ from sklearn.tree import export_graphviz
 from sklearn import model_selection
 from sklearn import tree
 from features import extract_features, get_magnitude
-from util import slidingWindow, reorient, reset_vars
+from util import slidingWindow, reset_vars
 import pickle
 import warnings
 from sklearn import metrics
@@ -23,7 +23,7 @@ from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, r
 
 print("Loading data...")
 sys.stdout.flush()
-data_file = 'data/jack_pushups.csv'
+data_file = 'data/all_data.csv'
 data = np.genfromtxt(data_file, comments="#", delimiter=',')
 print("Loaded {} raw labelled activity data samples.".format(len(data)))
 sys.stdout.flush()
@@ -50,7 +50,7 @@ reset_vars()
 # -----------------------------------------------------------------------------
 
 window_size = 50
-step_size = 10
+step_size = 50
 
 class_names = ["standing up", "pushups", "laying down","walking","jumping jacks","running in place"] #...
 
